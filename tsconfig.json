@@ -1,0 +1,50 @@
+{
+  // "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "lib": ["es2017", "DOM"],
+    "types": ["@react-navigation/native", "@react-navigation/bottom-tabs"],
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "typeRoots": ["node_modules/@types", "./src/"],
+    "paths": {
+      "@src": ["./src/"],
+      "@assets": ["./src/assets"],
+      "@configs": ["./src/configs"],
+      "@common": ["./src/common"],
+      "@contexts": ["./src/contexts"],
+      "@helpers": ["./src/helpers"],
+      "@hooks": ["./src/hooks/"],
+      "@navigations": ["./src/navigations"],
+      "@types": ["./src/types"],
+      "@enums": ["./src/enums"],
+      "@modules": ["./src/modules"],
+      "@appServices": ["./src/appServices"],
+      "@databaseServices": ["./src/databaseServices"],
+      "@screens": ["./src/screens"],
+      "@validations": ["./src/validations"],
+      "@layout": ["./src/layout"],
+      "@constants": ["./src/constants"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": [".//", ".tsx", ".json", ".tff", "typings//*.d.ts"],
+  "exclude": [
+    "node_modules",
+    "babel.config.ts",
+    "metro.config.js",
+    "jest.config.js",
+    "dist"
+  ]
+}
