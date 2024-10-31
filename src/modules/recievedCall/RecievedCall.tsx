@@ -1,78 +1,38 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {BackArrow, RecieveCallAvatar, UserAvatar} from '@assets';
-import {COLORS, hp, SCREEN, wp} from '@enums';
-import RecordIcon from 'react-native-vector-icons/MaterialIcons';
-import VolumeIcon from 'react-native-vector-icons/Ionicons';
-import VideoIcons from 'react-native-vector-icons/Feather';
-import EndCall from 'react-native-vector-icons/AntDesign';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {COLORS} from '@enums';
+import {
+  ZegoUIKitPrebuiltCall,
+  ONE_ON_ONE_VIDEO_CALL_CONFIG,
+} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {useNavigation} from '@react-navigation/native';
 
-const RecievedCall = () => {
-  const navigation: any = useNavigation();
-  const [activeIcons, setActiveIcons] = useState([false, false, false]);
+const RecievedCall = ({route}) => {
+  const {userData} = route?.params || {};
 
-  const callAttachment = [
-    <RecordIcon name="keyboard-voice" size={25} color={COLORS.white} />,
-    <VolumeIcon name="volume-high-outline" size={25} color={COLORS.white} />,
-    <VideoIcons name="video" size={25} color={COLORS.white} />,
-    <VideoIcons name="message-circle" size={25} color={COLORS.white} />,
-    <EndCall name="close" size={25} color={COLORS.white} />,
-  ];
+  // const {user} = useAuth();
+  const navigation = useNavigation();
 
-  const handleCallAttach = (index: number) => {
-    if (index < 3) {
-      // Toggle active state for first three icons
-      const updatedActiveIcons = [...activeIcons];
-      updatedActiveIcons[index] = !updatedActiveIcons[index];
-      setActiveIcons(updatedActiveIcons);
-    } else if (index === 3) {
-      navigation.navigate(SCREEN.CHAT_SCREEN);
-    } else if (index === 4) {
-      navigation.navigate(SCREEN.CHAT_SCREEN);
-    }
-  };
+  const APP_ID_KEY = 2057510125;
+  const APP_SIGNIN_KEY =
+    '272dfe8f46febf2147646be7d07848d26a942ee7ec8eecbff800b92e3148e40a';
+  const callID = 'test-call';
 
   return (
-    <View>
-      <RecieveCallAvatar width={wp(100.7)} height={hp(106)} />
-      <TouchableOpacity
-        style={styles.back}
-        onPress={() => navigation.navigate(SCREEN.CHAT_SCREEN)}>
-        <BackArrow />
-      </TouchableOpacity>
-      <View style={styles.currentUser}>
-        <UserAvatar width={wp(30)} height={wp(30)} />
-      </View>
-      <View style={styles.endAttach}>
-        {callAttachment.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => handleCallAttach(index)}
-            style={[
-              styles.icons,
-              {
-                backgroundColor:
-                  index < 3 && activeIcons[index]
-                    ? 'white'
-                    : index === 3
-                    ? COLORS.primary
-                    : index === 4
-                    ? 'red'
-                    : COLORS.gray,
-              },
-            ]}
-            key={index}>
-            {React.cloneElement(item, {
-              color:
-                index < 3 && activeIcons[index]
-                  ? 'black'
-                  : index === 3 || index === 4
-                  ? 'white'
-                  : COLORS.white,
-            })}
-          </TouchableOpacity>
-        ))}
-      </View>
+    <View style={styles.container}>
+      <ZegoUIKitPrebuiltCall
+        appID={APP_ID_KEY}
+        appSign={APP_SIGNIN_KEY}
+        userID={userData?.id}
+        userName={userData?.fullName || ''}
+        callID={callID}
+        config={{
+          ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
+          onCallEnd: () => {
+            navigation.goBack();
+          },
+        }}
+      />
     </View>
   );
 };
@@ -80,31 +40,10 @@ const RecievedCall = () => {
 export default RecievedCall;
 
 const styles = StyleSheet.create({
-  back: {
-    position: 'absolute',
-    top: 20,
-  },
-  currentUser: {
-    position: 'absolute',
-    right: 20,
-    top: 20,
-  },
-  endAttach: {
-    position: 'absolute',
-    bottom: 50,
-    padding: hp(3),
-    backgroundColor: COLORS.darkBlack,
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: wp(100),
-    justifyContent: 'space-around',
-  },
-  icons: {
-    padding: hp(1),
-    height: hp(7),
-    width: wp(14),
-    borderRadius: 30,
+  container: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: COLORS.white,
   },
 });

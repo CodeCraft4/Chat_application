@@ -14,7 +14,7 @@ const Home = () => {
   const [users, setUsers] = useState<any>([]);
   useEffect(() => {
     fetchAllUsers(setUsers);
-  }, []);
+  }, [user]);
 
   return (
     <View style={styles().container}>
