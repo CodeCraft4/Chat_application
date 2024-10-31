@@ -44,7 +44,7 @@ export const SearchBar = (props: Props) => {
       ) : (
         <TouchableOpacity
           style={styles.search}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.navigate(SCREEN.SEARCH_SCREEN)}>
           <Icon name="search1" size={30} color={COLORS.white} />
         </TouchableOpacity>
       )}

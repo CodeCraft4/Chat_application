@@ -1,13 +1,15 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {BackArrow, UserDummyAvatar} from '@assets';
 import {COLORS, hp, SCREEN, wp} from '@enums';
 import Icon from 'react-native-vector-icons/Ionicons';
 import VideoIcons from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
+import ClearChat from '../clearChatModal';
 
 export const NavbarChat = ({userData}: any) => {
   const navigation: any = useNavigation();
+  const [isModal, setIsModal] = useState(false);
 
   return (
     <View style={styles.navbar}>
@@ -15,7 +17,9 @@ export const NavbarChat = ({userData}: any) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <BackArrow />
         </TouchableOpacity>
-        <View style={styles.user}>
+        <TouchableOpacity
+          style={styles.user}
+          onPress={() => setIsModal(!isModal)}>
           {userData?.profileImg ? (
             <Image
               source={{uri: userData?.profileImg}}
@@ -28,7 +32,7 @@ export const NavbarChat = ({userData}: any) => {
             <Text style={styles.userName}>{userData?.fullName}</Text>
             <Text>Active Now</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.rightSide}>
         <TouchableOpacity
@@ -36,10 +40,15 @@ export const NavbarChat = ({userData}: any) => {
           <Icon name="call-outline" size={30} color={COLORS.black} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate(SCREEN.RECIVED_CALL_SCREEN)}>
+          onPress={() =>
+            navigation.navigate(SCREEN.RECIVED_CALL_SCREEN, {userData})
+          }>
           <VideoIcons name="video" size={30} color={COLORS.black} />
         </TouchableOpacity>
       </View>
+      {isModal && (
+        <ClearChat open={isModal} onClose={() => setIsModal(false)} users={userData} />
+      )}
     </View>
   );
 };
@@ -50,7 +59,7 @@ const styles = StyleSheet.create({
     padding: hp(1),
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.lightGray,
     elevation: 10,
     shadowColor: COLORS.lightGray,
   },

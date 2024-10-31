@@ -19,7 +19,6 @@ export const UserMessages = ({user}: any) => {
     );
   };
 
-  console.log(user, '--');
 
   return (
     <Swipeable renderRightActions={renderRightActions}>
