@@ -230,3 +230,21 @@ export const fetchMessage = (setMessages, myId) => {
     console.log('mssge not found in firestore', error.message);
   }
 };
+
+// clearChat
+export const clearMssgeChat = async user => {
+  const myId = user.uid;
+  try {
+    const messagesRef = firestore()
+      .collection('chats')
+      .doc(myId)
+      .collection('messages');
+    const snapshot = await messagesRef.get();
+    const deletePromises = snapshot.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+
+    Alert.alert('chats clear');
+  } catch (error) {
+    console.error('Error clearing messages:', error);
+  }
+};
