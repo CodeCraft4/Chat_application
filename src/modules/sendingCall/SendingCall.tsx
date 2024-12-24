@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {COLORS, hp, SCREEN, wp} from '@enums';
+import {COLORS, hp, wp} from '@enums';
 import {CallAvatar} from '@assets';
 import {Spacer} from '@common';
 import EndCall from 'react-native-vector-icons/AntDesign';
@@ -22,7 +22,7 @@ const SendingCall = () => {
       </View>
       <TouchableOpacity
         style={styles.icons}
-        onPress={() => navigation.navigate(SCREEN.CHAT_SCREEN)}>
+        onPress={() => navigation.goBack()}>
         <EndCall name="close" size={25} color={COLORS.white} />
       </TouchableOpacity>
       <Spacer height={hp(3)} />

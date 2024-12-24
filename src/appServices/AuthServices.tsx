@@ -242,8 +242,6 @@ export const clearMssgeChat = async user => {
     const snapshot = await messagesRef.get();
     const deletePromises = snapshot.docs.map(doc => doc.ref.delete());
     await Promise.all(deletePromises);
-
-    Alert.alert('chats clear');
   } catch (error) {
     console.error('Error clearing messages:', error);
   }

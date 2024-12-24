@@ -4084,6 +4084,7 @@ __metadata:
     react-native-image-picker: ^7.1.2
     react-native-keep-awake: ^4.0.0
     react-native-linear-gradient: ^2.8.3
+    react-native-push-notification: ^8.1.1
     react-native-reanimated: ^3.16.1
     react-native-responsive-screen: ^1.4.2
     react-native-safe-area-context: ^4.12.0
@@ -9805,6 +9806,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: a8672a50bbc60c9d925b8935b484cda2ed976483fce156f31b497d799eb349b24b79934aa683576e606e3fd3d8d97877d0048eba95f702f15ae21263c2658fd5
+  languageName: node
+  linkType: hard
+
+"react-native-push-notification@npm:^8.1.1":
+  version: 8.1.1
+  resolution: "react-native-push-notification@npm:8.1.1"
+  peerDependencies:
+    "@react-native-community/push-notification-ios": ^1.10.1
+    react-native: ">=0.33"
+  checksum: 64d500c1163eaa4eee549e6e2f8204cac643f91ae918a227e9d93f8261afdebbdaa7ba5d12da0039155cbf6a599032dd15be4ebe53737cbeeadec4469893f00d
   languageName: node
   linkType: hard
 

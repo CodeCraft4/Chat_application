@@ -1,6 +1,6 @@
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
-import {COLORS, hp, wp} from '@enums';
+import React, {useState, useEffect} from 'react';
+import {COLORS, hp, SCREEN, wp} from '@enums';
 import Icons from 'react-native-vector-icons/AntDesign';
 import {Spacer} from '../spacer';
 import CameraIcon from 'react-native-vector-icons/Feather';
@@ -16,6 +16,9 @@ import {
 } from 'react-native-vision-camera';
 import {openDocumentPicker, openGallery} from '@appServices';
 import CopyIcon from 'react-native-vector-icons/Feather';
+import {useNavigation} from '@react-navigation/native';
+import {ScrollView} from 'react-native-gesture-handler';
+import SelectedMediaModal from '../selectedMediaModal';
 
 type Props = {
   open: boolean;
@@ -24,10 +27,12 @@ type Props = {
 
 export const MediaModal = (props: Props) => {
   const {open, Onclose} = props;
+  const navigation: any = useNavigation();
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
   const [document, setDocument] = useState<string | null>(null);
   const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
   const {hasPermission, requestPermission} = useCameraPermission();
+  const [selectModal, setSelectModal] = useState<boolean>(false);
   const device = useCameraDevice('front');
 
   const handleOpenCamera = () => {
@@ -82,13 +87,34 @@ export const MediaModal = (props: Props) => {
       openDocumentPicker(setDocument);
     } else if (index === 3) {
       openGallery(setProfileImageUri);
+    } else if (index === 4) {
+      navigation.navigate('Bottom_tab', {screen: SCREEN.CONTACT_SCREEN});
+      handleModalClose();
     }
+  };
+
+  useEffect(() => {
+    if (profileImageUri || document) {
+      setSelectModal(true);
+    }
+  }, [profileImageUri, document]);
+
+  const handleModalClose = () => {
+    Onclose && Onclose();
+    setProfileImageUri(null);
+    setDocument(null);
+    closeCamera && closeCamera();
+  };
+
+  const handleSelectModalClose = () => {
+    setSelectModal(false);
+    handleModalClose();
   };
 
   return (
     <Modal
       visible={open}
-      onRequestClose={Onclose}
+      onRequestClose={handleModalClose}
       animationType="slide"
       transparent={true}>
       <View style={styles.modalContainer}>
@@ -98,36 +124,27 @@ export const MediaModal = (props: Props) => {
               name="close"
               size={25}
               color={COLORS.darkBlack}
-              onPress={Onclose}
+              onPress={handleModalClose}
             />
             <Spacer width={wp(25)} />
             <Text style={styles.content}>Share Content</Text>
           </View>
-          {contentMedia.map((item, index) => (
-            <TouchableOpacity
-              style={styles.media}
-              key={index}
-              onPress={() => handleOpenIndex(index)}>
-              <View style={styles.poster}>{item.poster}</View>
-              <Spacer width={wp(6)} />
-              <View>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text>{item.description}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-          {/* {document && (
-            <View style={styles.selectedDocument}>
-              <Text style={styles.documentText}>Selected Document:</Text>
-              <Text style={styles.documentUri}>{document}</Text>
-            </View>
-          )}
-          {profileImageUri && (
-            <View style={styles.selectedDocument}>
-              <Text style={styles.documentText}>Selected ProfileImge:</Text>
-              <Text style={styles.documentUri}>{document}</Text>
-            </View>
-          )} */}
+          <ScrollView>
+            {contentMedia.map((item, index) => (
+              <TouchableOpacity
+                style={styles.media}
+                key={index}
+                onPress={() => handleOpenIndex(index)}>
+                <View style={styles.poster}>{item.poster}</View>
+                <Spacer width={wp(6)} />
+                <View>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <Text>{item.description}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <Spacer height={hp(15)} />
         </View>
       </View>
       <Modal visible={isCameraOpen} transparent={true} animationType="fade">
@@ -140,10 +157,16 @@ export const MediaModal = (props: Props) => {
         )}
         <TouchableOpacity
           style={styles.closeCameraButton}
-          onPress={closeCamera}>
+          onPress={handleModalClose}>
           <CopyIcon name="x" size={30} color={COLORS.white} />
         </TouchableOpacity>
       </Modal>
+      <SelectedMediaModal
+        open={selectModal}
+        modalClose={handleSelectModalClose}
+        mediaType={profileImageUri}
+        documentType={document}
+      />
     </Modal>
   );
 };
@@ -210,5 +233,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 30,
     zIndex: 1,
+  },
+  profileImage: {
+    width: wp(100),
+    height: hp(20),
   },
 });

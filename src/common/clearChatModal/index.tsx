@@ -1,11 +1,10 @@
 import {Image, Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLORS, hp, wp} from '@enums';
 import {UserDummyAvatar} from '@assets';
 import Icons from 'react-native-vector-icons/AntDesign';
 import CommonBtn from '../commonButton';
-import {clearMssgeChat} from '@appServices';
-import {useAuth} from '@contexts';
+import {SuccessModal} from '../AlertModal';
 
 type Props = {
   open: boolean;
@@ -14,14 +13,7 @@ type Props = {
 };
 const ClearChat = (props: Props) => {
   const {open, onClose, users} = props || {};
-  const {user} = useAuth();
-
-  const handleClearChat = () => {
-    clearMssgeChat(user);
-    setTimeout(() => {
-      onClose();
-    }, 2000);
-  };
+  const [successModal, setSuccessModal] = useState<boolean>(false);
 
   return (
     <Modal
@@ -44,11 +36,18 @@ const ClearChat = (props: Props) => {
             <CommonBtn
               title="Clear Chat"
               bgcolor={'red'}
-              onPress={handleClearChat}
+              onPress={() => setSuccessModal(!successModal)}
             />
           </View>
         </View>
       </View>
+
+      {successModal && (
+        <SuccessModal
+          open={successModal}
+          onClose={() => setSuccessModal(false)}
+        />
+      )}
     </Modal>
   );
 };

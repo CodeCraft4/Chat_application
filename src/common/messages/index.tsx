@@ -4,8 +4,11 @@ import {UserDummyAvatar} from '@assets';
 import {COLORS, hp, wp} from '@enums';
 import Icons from 'react-native-vector-icons/FontAwesome';
 import {Swipeable} from 'react-native-gesture-handler';
+import {useAuth} from '@contexts';
 
-export const UserMessages = ({user}: any) => {
+export const UserMessages = ({user, latestMssg, unreadCount}: any) => {
+  const {uid: myId}:any = useAuth() || {};
+
   const renderRightActions = () => {
     return (
       <View style={styles.rightActionContainer}>
@@ -19,12 +22,11 @@ export const UserMessages = ({user}: any) => {
     );
   };
 
-
   return (
     <Swipeable renderRightActions={renderRightActions}>
       <View style={styles.mssgContainer}>
         <View style={styles.user}>
-        {user?.profileImg ? (
+          {user?.profileImg ? (
             <Image
               source={{uri: user?.profileImg}}
               style={{width: wp(16), height: hp(8), borderRadius: wp(8)}}
@@ -37,16 +39,21 @@ export const UserMessages = ({user}: any) => {
           </View>
           <View>
             <Text style={styles.userName}>
-              {user?.fullName ? user?.fullName : 'Unknow user'}
+              {user?.fullName ? user?.fullName : 'Unknown user'}
             </Text>
-            <Text>Latest message?</Text>
+            <Text>
+              {latestMssg.text ? latestMssg.text : 'No messages yet'}
+            </Text>
           </View>
         </View>
 
-        <View>
-          <Text>2 min ago</Text>
-          <Text style={styles.notification}>3</Text>
-        </View>
+        {/* Display the count of unread messages */}
+        {unreadCount > 0 && (
+          <View style={styles.notificationContainer}>
+            <Text style={styles.notification}>{unreadCount}</Text>
+              <Text>{myId === latestMssg.senderId ? '' : 'you'}</Text>
+          </View>
+        )}
       </View>
     </Swipeable>
   );
@@ -75,18 +82,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.darkBlack,
   },
+  notificationContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   notification: {
     backgroundColor: '#F04A4C',
     textAlign: 'center',
     borderRadius: 50,
     width: wp(6),
     height: hp(3),
-    alignItems: 'center',
-    padding: hp(0.2),
     color: COLORS.white,
     fontWeight: '900',
-    flexDirection: 'row',
-    margin: 'auto',
+    paddingVertical: hp(0.2),
   },
   rightActionContainer: {
     flexDirection: 'row',

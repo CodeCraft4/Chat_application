@@ -24,6 +24,9 @@ import {
 const UserChat = ({ route }) => {
   const { mssgUser, myId } = route?.params || {};
 
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const device = useCameraDevice('front');
+
   const [messages, setMessages] = useState<any>([]);
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
   const [media, setMedia] = useState<boolean>(false);
@@ -36,8 +39,6 @@ const UserChat = ({ route }) => {
     onSend(newMessages, setMessages, myId, mssgUser);
   };
 
-  const { hasPermission, requestPermission } = useCameraPermission();
-  const device = useCameraDevice('front');
 
   // open camera
   const handleOpenCamera = () => {
